@@ -19,12 +19,16 @@ export class LivroListaComponent implements OnInit {
 
   ngOnInit(): void {
     this.editoras = this.servEditora.getEditora();
-    this.livros = this.servLivros.obterLivros();
+    this.servLivros.obterLivros()
+      .then(livros => this.livros = livros)
+      .catch(err => console.error('Erro ao obter livros', err));
   }
 
-  excluir = (codigo: number): void => {
-    this.servLivros.excluir(codigo);
-    this.livros = this.servLivros.obterLivros();
+  excluir = (codigo: string): void => {
+    this.servLivros.excluir(codigo)
+    .then(() => this.servLivros.obterLivros())
+    .then(livrosAtualizados => this.livros = livrosAtualizados)
+    .catch(err => console.error('Erro ao excluir o livro', err));
   }
 
   obterNome = (codEditora: number): string | undefined => {
